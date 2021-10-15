@@ -1,0 +1,7 @@
+name: WUProjects
+version: ${project.version}
+main: me.frauenfelderflorian.wuprojects.WUProjects
+api-version: 1.17
+depend: [ WorldUtils ]
+authors: [ flopsi_ ]
+description: a Minecraft Spigot plugin containing some long-term projects
