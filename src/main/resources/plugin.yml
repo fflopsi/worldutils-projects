@@ -5,3 +5,7 @@ api-version: 1.17
 depend: [ WorldUtils ]
 authors: [ flopsi_ ]
 description: a Minecraft Spigot plugin containing some long-term projects
+commands:
+  allitems:
+    description: collect all obtainable items
+    usage: /<command> new | skip | reset
