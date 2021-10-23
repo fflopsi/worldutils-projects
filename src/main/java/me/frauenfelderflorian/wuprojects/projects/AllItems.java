@@ -1,15 +1,25 @@
 package me.frauenfelderflorian.wuprojects.projects;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class AllItems {
+    public BossBar itemBar;
+    public List<Material> items;
+    public int itemIndex;
+
     public AllItems() {
         //get all items
-        ArrayList<Material> items = (ArrayList<Material>) Arrays.asList(Material.values());
-        //remove all items that are not obtainable in survival //async?
+        items = new ArrayList<>(Arrays.asList(Material.values()));
+        //remove all items that are not obtainable in survival
         items.removeIf(mat -> mat.isAir()
                 || mat == Material.BAMBOO_SAPLING
                 || mat == Material.BARRIER
@@ -43,21 +53,41 @@ public class AllItems {
                 || mat == Material.SWEET_BERRY_BUSH
                 || mat == Material.TRIPWIRE
                 || mat == Material.WATER
-                || mat.name().contains("CANDLE_CAKE")
-                || mat.name().contains("_CAULDRON")
-                || mat.name().contains("CAVE_VINES")
-                || mat.name().contains("COMMAND_BLOCK")
-                || mat.name().contains("INFESTED")
-                || mat.name().contains("LEGACY")
-                || mat.name().contains("MELON_STEM")
-                || mat.name().contains("PLANT")
-                || mat.name().contains("PORTAL")
-                || mat.name().contains("POTTED")
-                || mat.name().contains("PUMPKIN_STEM")
-                || mat.name().contains("SPAWN_EGG")
-                || mat.name().contains("STRUCTURE")
-                || mat.name().contains("TALL")
-                || mat.name().contains("WALL_")
-        ); //should be 1003 now, some not yet obtainable in 1.17.1
+                || mat.toString().contains("CANDLE_CAKE")
+                || mat.toString().contains("_CAULDRON")
+                || mat.toString().contains("CAVE_VINES")
+                || mat.toString().contains("COMMAND_BLOCK")
+                || mat.toString().contains("INFESTED")
+                || mat.toString().contains("LEGACY")
+                || mat.toString().contains("MELON_STEM")
+                || mat.toString().contains("PLANT")
+                || mat.toString().contains("PORTAL")
+                || mat.toString().contains("POTTED")
+                || mat.toString().contains("PUMPKIN_STEM")
+                || mat.toString().contains("SPAWN_EGG")
+                || mat.toString().contains("STRUCTURE")
+                || mat.toString().contains("TALL")
+                || mat.toString().contains("WALL_")
+        ); //makes 1003 survival items, some not yet obtainable in 1.17.1
+        Collections.shuffle(items);
+    }
+
+    public void start() {
+        //set setting
+        itemBar = Bukkit.createBossBar("Next item: §b§l", BarColor.BLUE, BarStyle.SOLID);
+        itemBar.setVisible(true);
+        itemIndex = 0;
+        itemBar.setTitle("Next item: §b§l" + items.get(itemIndex));
+    }
+
+    public void next() {
+        itemIndex++;
+        if (itemIndex < items.size()) {
+            itemBar.setTitle("Next item: §b§l" + items.get(itemIndex));
+            itemBar.setProgress((double) items.size() / itemIndex);
+        } else {
+            itemIndex = -1;
+            itemBar.setTitle("§b§lAll items collected!");
+        }
     }
 }
