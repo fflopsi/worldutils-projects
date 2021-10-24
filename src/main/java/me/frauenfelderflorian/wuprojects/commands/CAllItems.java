@@ -1,5 +1,6 @@
 package me.frauenfelderflorian.wuprojects.commands;
 
+import me.frauenfelderflorian.wuprojects.WUProjects;
 import me.frauenfelderflorian.wuprojects.projects.AllItems;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -7,12 +8,12 @@ import org.bukkit.command.TabExecutor;
 
 import java.util.List;
 
-public class CAllItems implements TabExecutor {
-    public static String command = "allitems";
+public record CAllItems(WUProjects plugin) implements TabExecutor {
+    public static final String CMD = "allitems";
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
-        new AllItems();
+        plugin.allItems = new AllItems(plugin);
         return true;
     }
 
