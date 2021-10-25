@@ -14,10 +14,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class AllItems {
-    private final WUProjects plugin;
     public BossBar itemBar;
-    public List<?> items;
     public int index;
+    private final List<Material> items;
+    private final List<Material> obtained;
+    private final WUProjects plugin;
 
     public AllItems(WUProjects plugin) {
         this.plugin = plugin;
@@ -25,7 +26,7 @@ public class AllItems {
             //get all items
             items = new ArrayList<>(Arrays.asList(Material.values()));
             //remove all items that are not obtainable in survival
-            items.removeIf(mat -> ((Material) mat).isAir()
+            items.removeIf(mat -> mat.isAir()
                     || mat == Material.BAMBOO_SAPLING
                     || mat == Material.BARRIER
                     || mat == Material.BEDROCK
@@ -76,8 +77,14 @@ public class AllItems {
             ); //makes 1003 survival items, some not yet obtainable in 1.17.1
             Collections.shuffle(items);
             index = 0;
+            obtained = new ArrayList<>();
         } else {
-            items = plugin.utils.prefs.getList(Prefs.Option.WUP_ALLITMES_ITEMS);
+            items = new ArrayList<>();
+            for (Object item : plugin.utils.prefs.getList(Prefs.Option.WUP_ALLITMES_ITEMS))
+                items.add((Material) item);
+            obtained = new ArrayList<>();
+            for (Object item : plugin.utils.prefs.getList(Prefs.Option.WUP_ALLITEMS_OBTAINED))
+                items.add((Material) item);
             index = plugin.utils.prefs.getInt(Prefs.Option.WUP_ALLITMES_INDEX);
         }
     }
@@ -85,6 +92,7 @@ public class AllItems {
     public void start() {
         plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_RUNNING, true, true);
         plugin.utils.prefs.set(Prefs.Option.WUP_ALLITMES_ITEMS, items, true);
+        plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_OBTAINED, obtained, true);
         itemBar = Bukkit.createBossBar("Next item: §b§l", BarColor.BLUE, BarStyle.SOLID);
         itemBar.setVisible(true);
         itemBar.setTitle("Next item: §b§l" + items.get(index));
@@ -92,6 +100,7 @@ public class AllItems {
     }
 
     public void next() {
+        obtained.add(items.get(index));
         index++;
         if (index < items.size()) {
             itemBar.setTitle("Next item: §b§l" + items.get(index));
@@ -99,6 +108,7 @@ public class AllItems {
         } else {
             index = -1;
             itemBar.setTitle("§b§lAll items collected!");
+            plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_RUNNING, false, true);
         }
         plugin.utils.prefs.set(Prefs.Option.WUP_ALLITMES_INDEX, index, true);
     }
