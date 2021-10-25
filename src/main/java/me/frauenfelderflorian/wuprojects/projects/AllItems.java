@@ -104,7 +104,7 @@ public class AllItems {
         index++;
         if (index < items.size()) {
             itemBar.setTitle("Next item: §b§l" + items.get(index));
-            itemBar.setProgress((double) items.size() / index);
+            itemBar.setProgress((double) index / items.size());
         } else {
             index = -1;
             itemBar.setTitle("§b§lAll items collected!");
