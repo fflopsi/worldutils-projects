@@ -3,7 +3,6 @@ package me.frauenfelderflorian.wuprojects.commands;
 import me.frauenfelderflorian.worldutils.config.Prefs;
 import me.frauenfelderflorian.wuprojects.WUProjects;
 import me.frauenfelderflorian.wuprojects.projects.AllItems;
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,11 +28,8 @@ public record CAllItems(WUProjects plugin) implements TabExecutor {
                     return true;
                 }
                 case "skip" -> {
-                    sender.sendMessage("§eSkipping " + WordUtils.capitalizeFully(
-                            plugin.utils.prefs.getList(Prefs.Option.WUP_ALLITMES_ITEMS)
-                                    .get(plugin.utils.prefs.getInt(Prefs.Option.WUP_ALLITMES_INDEX) - 1)
-                                    .toString().replace('_', ' ')));
-                    plugin.allItems.update(true);
+                    if (plugin.utils.prefs.getBoolean(Prefs.Option.WUP_ALLITEMS_RUNNING)) plugin.allItems.update(true);
+                    else sender.sendMessage("§eThe AllItems project is not running.");
                     return true;
                 }
             }
