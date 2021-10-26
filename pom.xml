@@ -8,12 +8,10 @@
     <artifactId>WUProjects</artifactId>
     <version>0.1</version>
     <packaging>jar</packaging>
-
     <name>WUProjects</name>
-
     <description>a Minecraft Spigot plugin containing some long-term projects</description>
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
