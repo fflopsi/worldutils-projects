@@ -2,6 +2,7 @@ package me.frauenfelderflorian.wuprojects.projects;
 
 import me.frauenfelderflorian.worldutils.config.Prefs;
 import me.frauenfelderflorian.wuprojects.WUProjects;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.boss.BarColor;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class AllItems {
     public BossBar itemBar;
-    public int index;
+    private int index;
     private final List<Material> items;
     private final List<Material> obtained;
     private final WUProjects plugin;
@@ -76,8 +77,8 @@ public class AllItems {
                     || mat.toString().contains("WALL_")
             ); //makes 1003 survival items, some not yet obtainable in 1.17.1
             Collections.shuffle(items);
-            index = 0;
             obtained = new ArrayList<>();
+            index = 0;
         } else {
             items = new ArrayList<>();
             for (Object item : plugin.utils.prefs.getList(Prefs.Option.WUP_ALLITMES_ITEMS))
@@ -87,23 +88,21 @@ public class AllItems {
                 items.add((Material) item);
             index = plugin.utils.prefs.getInt(Prefs.Option.WUP_ALLITMES_INDEX);
         }
-    }
-
-    public void start() {
         plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_RUNNING, true, true);
         plugin.utils.prefs.set(Prefs.Option.WUP_ALLITMES_ITEMS, items, true);
         plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_OBTAINED, obtained, true);
         itemBar = Bukkit.createBossBar("Next item: §b§l", BarColor.BLUE, BarStyle.SOLID);
         itemBar.setVisible(true);
-        itemBar.setTitle("Next item: §b§l" + items.get(index));
-        plugin.utils.prefs.set(Prefs.Option.WUP_ALLITMES_INDEX, index, true);
+        update(false);
     }
 
-    public void next() {
-        obtained.add(items.get(index));
-        index++;
+    public void update(boolean next) {
+        if (next) {
+            obtained.add(items.get(index));
+            index++;
+        }
         if (index < items.size()) {
-            itemBar.setTitle("Next item: §b§l" + items.get(index));
+            itemBar.setTitle("Next item: §b§l" + WordUtils.capitalizeFully(items.get(index).toString().replace('_', ' ')));
             itemBar.setProgress((double) index / items.size());
         } else {
             index = -1;
