@@ -102,13 +102,19 @@ public class AllItems {
             index++;
         }
         if (index < items.size()) {
-            itemBar.setTitle("Next item: §b§l" + WordUtils.capitalizeFully(items.get(index).toString().replace('_', ' ')));
+            Bukkit.broadcastMessage("§bNext item to collect: §l" + itemName(items.get(index)));
+            itemBar.setTitle("Next item: §b§l" + itemName(items.get(index)));
             itemBar.setProgress((double) index / items.size());
         } else {
+            Bukkit.broadcastMessage("§bAll items collected! §lCongratulations, you finished the project §oAllItems!");
             index = -1;
             itemBar.setTitle("§b§lAll items collected!");
             plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_RUNNING, false, true);
         }
         plugin.utils.prefs.set(Prefs.Option.WUP_ALLITMES_INDEX, index, true);
+    }
+
+    private static String itemName(Material item) {
+        return WordUtils.capitalizeFully(item.toString().replace('_', ' '));
     }
 }
