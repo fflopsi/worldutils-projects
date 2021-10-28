@@ -34,7 +34,7 @@ public record CAllItems(WUProjects plugin) implements TabExecutor {
                     return true;
                 }
                 case "reset" -> {
-                    if (!plugin.utils.prefs.getBoolean(Prefs.Option.WUP_ALLITEMS_RUNNING)) {
+                    if (plugin.utils.prefs.getBoolean(Prefs.Option.WUP_ALLITEMS_RUNNING)) {
                         Bukkit.broadcastMessage("§cResetting AllItems project.");
                         Bukkit.broadcastMessage("§eStart the AllItems project with \"/allitems start\".");
                         plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_RUNNING, false, true);
@@ -54,6 +54,10 @@ public record CAllItems(WUProjects plugin) implements TabExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        return null;
+        List<String> completions = new ArrayList<>();
+        if (plugin.utils.prefs.getBoolean(Prefs.Option.WUP_ALLITEMS_RUNNING))
+            completions.addAll(List.of("skip", "reset"));
+        else completions.add("start");
+        return completions;
     }
 }
