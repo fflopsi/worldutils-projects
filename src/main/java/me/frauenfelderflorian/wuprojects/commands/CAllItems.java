@@ -8,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public record CAllItems(WUProjects plugin) implements TabExecutor {
@@ -23,7 +24,7 @@ public record CAllItems(WUProjects plugin) implements TabExecutor {
                         Bukkit.broadcastMessage("§bNew AllItems project started!");
                     } else {
                         sender.sendMessage("§ePlease reset the AllItems project before starting a new one.");
-                        sender.sendMessage("§cType \"/allitems reset\" to reset the ongoing AllItems project.");
+                        sender.sendMessage("§cType \"/allitems reset\" to reset the AllItems project.");
                     }
                     return true;
                 }
@@ -33,14 +34,18 @@ public record CAllItems(WUProjects plugin) implements TabExecutor {
                     return true;
                 }
                 case "reset" -> {
-                    Bukkit.broadcastMessage("§cResetting AllItems project.");
-                    Bukkit.broadcastMessage("§eStart a new AllItems project with \"/allitems start\".");
-                    plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_RUNNING, false, true);
-                    plugin.utils.prefs.remove(Prefs.Option.WUP_ALLITMES_ITEMS);
-                    plugin.utils.prefs.remove(Prefs.Option.WUP_ALLITEMS_OBTAINED);
-                    plugin.utils.prefs.remove(Prefs.Option.WUP_ALLITMES_INDEX);
-                    plugin.allItems.itemBar.setVisible(false);
-                    plugin.allItems = null;
+                    if (!plugin.utils.prefs.getBoolean(Prefs.Option.WUP_ALLITEMS_RUNNING)) {
+                        Bukkit.broadcastMessage("§cResetting AllItems project.");
+                        Bukkit.broadcastMessage("§eStart the AllItems project with \"/allitems start\".");
+                        plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_RUNNING, false, true);
+                        plugin.utils.prefs.remove(Prefs.Option.WUP_ALLITMES_ITEMS);
+                        plugin.utils.prefs.remove(Prefs.Option.WUP_ALLITEMS_OBTAINED);
+                        plugin.utils.prefs.remove(Prefs.Option.WUP_ALLITMES_INDEX);
+                        plugin.allItems.itemBar.setVisible(false);
+                        plugin.allItems = null;
+                    } else {
+                        sender.sendMessage("§eThe AllItems project is not running.");
+                    }
                     return true;
                 }
             }
