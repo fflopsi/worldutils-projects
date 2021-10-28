@@ -16,6 +16,7 @@ public final class WUProjects extends JavaPlugin {
         utils = WorldUtils.getInstance();
         Objects.requireNonNull(getCommand(CAllItems.CMD)).setExecutor(new CAllItems(this));
         Objects.requireNonNull(getCommand(CAllItems.CMD)).setTabCompleter(new CAllItems(this));
+        getServer().getPluginManager().registerEvents(new Listeners(this), this);
     }
 
     @Override
