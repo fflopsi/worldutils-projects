@@ -8,4 +8,4 @@ description: a Minecraft Spigot plugin containing some long-term projects
 commands:
   allitems:
     description: collect all obtainable items
-    usage: /<command> new | skip | reset
+    usage: /<command> start | skip | reset
