@@ -1,4 +1,4 @@
-name: WUProjects
+name: ${project.name}
 version: ${project.version}
 main: me.frauenfelderflorian.wuprojects.WUProjects
 api-version: 1.17
