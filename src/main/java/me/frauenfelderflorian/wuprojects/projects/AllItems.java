@@ -14,16 +14,40 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Class containing the AllItems project (objective: collect all survival-obtainable items)
+ */
 public class AllItems {
+    /**
+     * Displays the next item and the overall progress
+     */
     public BossBar itemBar;
+    /**
+     * Index of the next item
+     */
     private int index;
+    /**
+     * List of all items to obtaine
+     */
     private final List<Material> items;
+    /**
+     * List of all obtained items
+     */
     private final List<Material> obtained;
+    /**
+     * The WUProjects instance which this project belongs to
+     */
     private final WUProjects plugin;
 
+    /**
+     * Create a new AllItems project
+     *
+     * @param plugin the plugin which the project belongs to
+     */
     public AllItems(WUProjects plugin) {
         this.plugin = plugin;
         if (plugin.utils.prefs.getList(Prefs.Option.WUP_ALLITMES_ITEMS) == null) {
+            //create an all-new project
             //get all items
             items = new ArrayList<>(Arrays.asList(Material.values()));
             //remove all items that are not obtainable in survival
@@ -80,6 +104,7 @@ public class AllItems {
             obtained = new ArrayList<>();
             index = 0;
         } else {
+            //load the existing project
             items = new ArrayList<>();
             for (Object item : plugin.utils.prefs.getList(Prefs.Option.WUP_ALLITMES_ITEMS))
                 items.add((Material) item);
@@ -88,24 +113,35 @@ public class AllItems {
                 items.add((Material) item);
             index = plugin.utils.prefs.getInt(Prefs.Option.WUP_ALLITMES_INDEX);
         }
+        //save to preferences
         plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_RUNNING, true, true);
         plugin.utils.prefs.set(Prefs.Option.WUP_ALLITMES_ITEMS, items, true);
         plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_OBTAINED, obtained, true);
+        //set up the BossBar
         itemBar = Bukkit.createBossBar("Next item: §b§l", BarColor.BLUE, BarStyle.SOLID);
         itemBar.setVisible(true);
         update(false);
     }
 
+    /**
+     * Update the project
+     *
+     * @param next true if the next item should be displayed
+     */
     public void update(boolean next) {
         if (next) {
+            //display next item
             obtained.add(items.get(index));
             index++;
         }
+        //set (new) progress
+        itemBar.setProgress((double) index / items.size());
         if (index < items.size()) {
+            //there are more items to collect
             Bukkit.broadcastMessage("§bNext item to collect: §l" + itemName(items.get(index)));
             itemBar.setTitle("Next item: §b§l" + itemName(items.get(index)));
-            itemBar.setProgress((double) index / items.size());
         } else {
+            //all items are collected
             Bukkit.broadcastMessage("§bAll items collected! §lCongratulations, you finished the project §oAllItems!");
             index = -1;
             itemBar.setTitle("§b§lAll items collected!");
@@ -114,6 +150,14 @@ public class AllItems {
         plugin.utils.prefs.set(Prefs.Option.WUP_ALLITMES_INDEX, index, true);
     }
 
+    /**
+     * Get a nicely formatted (Title Case) item name from a Material
+     * <p>
+     * Example: item.toString() returns "TITLE_CASE" --> this method returns "Title Case"
+     *
+     * @param item the Material whose name to get
+     * @return the formatted String containing the name of the item
+     */
     private static String itemName(Material item) {
         return WordUtils.capitalizeFully(item.toString().replace('_', ' '));
     }
