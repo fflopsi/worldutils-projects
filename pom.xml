@@ -8,7 +8,7 @@
     <artifactId>WUProjects</artifactId>
     <version>0.1</version>
     <packaging>jar</packaging>
-    <name>${artifactId}</name>
+    <name>${project.artifactId}</name>
     <description>a Minecraft Spigot plugin containing some long-term projects</description>
     <properties>
         <java.version>16</java.version>
