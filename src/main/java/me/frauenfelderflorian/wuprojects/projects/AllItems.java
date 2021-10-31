@@ -22,15 +22,15 @@ public class AllItems {
     /**
      * Displays the next item and the overall progress
      */
-    private BossBar itemBar;
-    /**
-     * Index of the next item
-     */
-    private int index;
+    private final BossBar itemBar;
     /**
      * List of all items to obtaine
      */
     private final List<Material> items;
+    /**
+     * Index of the next item
+     */
+    private int index;
     /**
      * The WUProjects instance which this project belongs to
      */
