@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +22,7 @@ public class AllItems {
     /**
      * Displays the next item and the overall progress
      */
-    public BossBar itemBar;
+    private BossBar itemBar;
     /**
      * Index of the next item
      */
@@ -30,10 +31,6 @@ public class AllItems {
      * List of all items to obtaine
      */
     private final List<Material> items;
-    /**
-     * List of all obtained items
-     */
-    private final List<Material> obtained;
     /**
      * The WUProjects instance which this project belongs to
      */
@@ -101,22 +98,20 @@ public class AllItems {
                     || mat.toString().contains("WALL_")
             ); //makes 1003 survival items, some not yet obtainable in 1.17.1
             Collections.shuffle(items);
-            obtained = new ArrayList<>();
             index = 0;
+            //save to preferences
+            List<String> itemStrings = new ArrayList<>();
+            for (Material item : items) itemStrings.add(item.toString());
+            plugin.utils.prefs.set(Prefs.Option.WUP_ALLITMES_ITEMS, itemStrings, true);
         } else {
             //load the existing project
             items = new ArrayList<>();
             for (Object item : plugin.utils.prefs.getList(Prefs.Option.WUP_ALLITMES_ITEMS))
-                items.add((Material) item);
-            obtained = new ArrayList<>();
-            for (Object item : plugin.utils.prefs.getList(Prefs.Option.WUP_ALLITEMS_OBTAINED))
-                items.add((Material) item);
+                items.add(Material.getMaterial((String) item));
             index = plugin.utils.prefs.getInt(Prefs.Option.WUP_ALLITMES_INDEX);
         }
         //save to preferences
         plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_RUNNING, true, true);
-        plugin.utils.prefs.set(Prefs.Option.WUP_ALLITMES_ITEMS, items, true);
-        plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_OBTAINED, obtained, true);
         //set up the BossBar
         itemBar = Bukkit.createBossBar("Next item: §b§l", BarColor.BLUE, BarStyle.SOLID);
         itemBar.setVisible(true);
@@ -129,17 +124,14 @@ public class AllItems {
      * @param next true if the next item should be displayed
      */
     public void update(boolean next) {
-        if (next) {
-            //display next item
-            obtained.add(items.get(index));
-            index++;
-        }
+        //display next item
+        if (next) index++;
         //set (new) progress
         itemBar.setProgress((double) index / items.size());
         if (index < items.size()) {
             //there are more items to collect
-            Bukkit.broadcastMessage("§bNext item to collect: §l" + itemName(items.get(index)));
-            itemBar.setTitle("Next item: §b§l" + itemName(items.get(index)));
+            Bukkit.broadcastMessage("§bNext item to collect: §l" + itemName(getNextItem()));
+            itemBar.setTitle("Next item: §b§l" + itemName(getNextItem()));
         } else {
             //all items are collected
             Bukkit.broadcastMessage("§bAll items collected! §lCongratulations, you finished the project §oAllItems!");
@@ -148,6 +140,35 @@ public class AllItems {
             plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_RUNNING, false, true);
         }
         plugin.utils.prefs.set(Prefs.Option.WUP_ALLITMES_INDEX, index, true);
+    }
+
+    /**
+     * Get the next item to collect
+     *
+     * @return Material type of the next item
+     */
+    public Material getNextItem() {
+        return items.get(index);
+    }
+
+    /**
+     * Add a player to the project, so that they can see the BossBar
+     *
+     * @param player the Player to be added
+     */
+    public void addPlayer(Player player) {
+        itemBar.addPlayer(player);
+    }
+
+    /**
+     * Reset the whole project
+     */
+    public void reset() {
+        plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_RUNNING, false, true);
+        plugin.utils.prefs.remove(Prefs.Option.WUP_ALLITMES_ITEMS);
+        plugin.utils.prefs.remove(Prefs.Option.WUP_ALLITEMS_OBTAINED);
+        plugin.utils.prefs.remove(Prefs.Option.WUP_ALLITMES_INDEX);
+        itemBar.removeAll();
     }
 
     /**

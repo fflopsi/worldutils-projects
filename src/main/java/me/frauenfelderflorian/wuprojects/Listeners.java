@@ -1,6 +1,7 @@
 package me.frauenfelderflorian.wuprojects;
 
 import me.frauenfelderflorian.worldutils.config.Prefs;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,9 +21,7 @@ public record Listeners(WUProjects plugin) implements Listener {
     public void onEntityPickupItemEvent(EntityPickupItemEvent event) {
         if (event.getEntity() instanceof Player && plugin.utils.prefs.getBoolean(Prefs.Option.TIMER_RUNNING)
                 && plugin.utils.prefs.getBoolean(Prefs.Option.WUP_ALLITEMS_RUNNING)
-                && event.getItem().getItemStack().getType()
-                == plugin.utils.prefs.getList(Prefs.Option.WUP_ALLITMES_ITEMS)
-                .get(plugin.utils.prefs.getInt(Prefs.Option.WUP_ALLITMES_INDEX))) {
+                && event.getItem().getItemStack().getType() == plugin.allItems.getNextItem()) {
             plugin.allItems.update(true);
         }
     }
@@ -35,6 +34,6 @@ public record Listeners(WUProjects plugin) implements Listener {
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
         if (plugin.utils.prefs.getBoolean(Prefs.Option.WUP_ALLITEMS_RUNNING))
-            plugin.allItems.itemBar.addPlayer(event.getPlayer());
+            plugin.allItems.addPlayer(event.getPlayer());
     }
 }
