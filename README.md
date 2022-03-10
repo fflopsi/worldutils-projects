@@ -19,8 +19,8 @@ be installed as well. On the next server (re)start, the plugin should be initial
 
 ## Usage
 
-To use the plugin, enter an appropriate command. All commands have tab completion (except when accessing personal
-positions of other players), so you do not need to know the exact syntax when typing.
+To use the plugin, enter an appropriate command. All commands have tab completion, so you do not need to know the exact
+syntax when typing.
 
 The commands and their respective syntax are:
 
