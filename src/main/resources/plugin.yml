@@ -1,10 +1,10 @@
 name: ${project.name}
 version: ${project.version}
 main: me.frauenfelderflorian.wuprojects.WUProjects
-api-version: 1.17
+api-version: 1.18
 depend: [ WorldUtils ]
 authors: [ flopsi_ ]
-description: a Minecraft Spigot plugin containing some long-term projects
+description: ${project.description}
 commands:
   allitems:
     description: collect all obtainable items
