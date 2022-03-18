@@ -1,5 +1,11 @@
 # WorldUtils Projects
 
+![release](https://img.shields.io/github/v/release/WorldUtils/wu-projects?sort=semver)
+![commits](https://img.shields.io/github/commits-since/WorldUtils/wu-projects/latest?sort=semver)
+![downloads](https://img.shields.io/github/downloads/WorldUtils/wu-projects/latest/total?sort=semver)
+![issues](https://img.shields.io/github/issues/WorldUtils/wu-projects)
+![build](https://img.shields.io/github/workflow/status/WorldUtils/wu-projects/Java%20CI%20with%20Maven)
+
 This Minecraft Spigot plugin contains some long-term projects and is an extension to my other
 plugin, [WorldUtils](https://github.com/WorldUtils/world-utils).
 
