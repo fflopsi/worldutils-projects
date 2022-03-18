@@ -75,7 +75,7 @@
         </dependency>
         <dependency>
             <groupId>me.frauenfelderflorian</groupId>
-            <artifactId>WorldUtils</artifactId>
+            <artifactId>worldutils</artifactId>
             <version>1.1.0</version>
             <scope>provided</scope>
         </dependency>
