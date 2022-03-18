@@ -1,6 +1,6 @@
 package me.frauenfelderflorian.wuprojects.projects;
 
-import me.frauenfelderflorian.worldutils.WorldUtils;
+import me.frauenfelderflorian.worldutils.Messages;
 import me.frauenfelderflorian.worldutils.config.Prefs;
 import me.frauenfelderflorian.wuprojects.WUProjects;
 import org.apache.commons.lang.WordUtils;
@@ -44,10 +44,10 @@ public class AllItems {
      */
     public AllItems(WUProjects plugin) {
         this.plugin = plugin;
-        //get all items
-        items = new ArrayList<>(Arrays.asList(Material.values()));
+        //get all items from the current version
+        ArrayList<Material> itemsNew = new ArrayList<>(Arrays.asList(Material.values()));
         //remove all items that are not obtainable in survival
-        items.removeIf(mat -> mat.isAir()
+        itemsNew.removeIf(mat -> mat.isAir()
                 || mat == Material.BAMBOO_SAPLING
                 || mat == Material.BARRIER
                 || mat == Material.BEDROCK
@@ -95,29 +95,32 @@ public class AllItems {
                 || mat.toString().contains("STRUCTURE")
                 || mat.toString().contains("TALL")
                 || mat.toString().contains("WALL_")
-        ); //makes 1003 survival items, some not yet obtainable in 1.17.1
+        );
         if (plugin.utils.prefs.getList(Prefs.Option.WUP_ALLITMES_ITEMS) == null) {
             //create an all-new project
-            Collections.shuffle(items);
+            Collections.shuffle(itemsNew);
+            items = new ArrayList<>(itemsNew);
             index = 0;
-            //save to preferences
-            List<String> itemStrings = new ArrayList<>();
-            for (Material item : items) itemStrings.add(item.toString());
-            plugin.utils.prefs.set(Prefs.Option.WUP_ALLITMES_ITEMS, itemStrings, true);
         } else {
             //load the existing project
             List<Material> itemsSaved = new ArrayList<>();
             for (Object item : plugin.utils.prefs.getList(Prefs.Option.WUP_ALLITMES_ITEMS))
                 itemsSaved.add(Material.getMaterial((String) item));
-            for (Material mat : items) {
+            //add new items
+            for (Material mat : itemsNew)
                 if (!itemsSaved.contains(mat)) {
                     itemsSaved.add(mat);
+                    Messages.sendMessage(itemName(mat) + " has been added to the list of items to obtain.");
                 }
-            }
+            //save to properties
+            items = new ArrayList<>(itemsSaved);
             index = plugin.utils.prefs.getInt(Prefs.Option.WUP_ALLITMES_INDEX);
         }
         //save to preferences
         plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_RUNNING, true, true);
+        List<String> itemStrings = new ArrayList<>();
+        for (Material item : items) itemStrings.add(item.toString());
+        plugin.utils.prefs.set(Prefs.Option.WUP_ALLITMES_ITEMS, itemStrings, true);
         //set up the BossBar
         itemBar = Bukkit.createBossBar("Next item: §b§l", BarColor.BLUE, BarStyle.SOLID);
         itemBar.setVisible(true);
@@ -141,7 +144,6 @@ public class AllItems {
         } else {
             //all items are collected
             Bukkit.broadcastMessage("§bAll items collected! §lCongratulations, you finished the project §oAllItems!");
-            index = -1;
             itemBar.setTitle("§b§lAll items collected!");
             plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_RUNNING, false, true);
         }
