@@ -1,5 +1,6 @@
 package me.frauenfelderflorian.wuprojects.projects;
 
+import me.frauenfelderflorian.worldutils.WorldUtils;
 import me.frauenfelderflorian.worldutils.config.Prefs;
 import me.frauenfelderflorian.wuprojects.WUProjects;
 import org.apache.commons.lang.WordUtils;
@@ -43,60 +44,60 @@ public class AllItems {
      */
     public AllItems(WUProjects plugin) {
         this.plugin = plugin;
+        //get all items
+        items = new ArrayList<>(Arrays.asList(Material.values()));
+        //remove all items that are not obtainable in survival
+        items.removeIf(mat -> mat.isAir()
+                || mat == Material.BAMBOO_SAPLING
+                || mat == Material.BARRIER
+                || mat == Material.BEDROCK
+                || mat == Material.BEETROOTS
+                || mat == Material.BIG_DRIPLEAF_STEM
+                || mat == Material.BUBBLE_COLUMN
+                || mat == Material.BUDDING_AMETHYST
+                || mat == Material.CARROTS
+                || mat == Material.COCOA
+                || mat == Material.DEBUG_STICK
+                || mat == Material.DIRT_PATH
+                || mat == Material.END_GATEWAY
+                || mat == Material.FARMLAND
+                || mat == Material.FIRE
+                || mat == Material.FROSTED_ICE
+                || mat == Material.JIGSAW
+                || mat == Material.KNOWLEDGE_BOOK
+                || mat == Material.LARGE_FERN
+                || mat == Material.LAVA
+                || mat == Material.LIGHT
+                || mat == Material.MOVING_PISTON
+                || mat == Material.PETRIFIED_OAK_SLAB
+                || mat == Material.PISTON_HEAD
+                || mat == Material.PLAYER_HEAD
+                || mat == Material.POTATOES
+                || mat == Material.POWDER_SNOW
+                || mat == Material.REDSTONE_WIRE
+                || mat == Material.SOUL_FIRE
+                || mat == Material.SPAWNER
+                || mat == Material.SWEET_BERRY_BUSH
+                || mat == Material.TRIPWIRE
+                || mat == Material.WATER
+                || mat.toString().contains("CANDLE_CAKE")
+                || mat.toString().contains("_CAULDRON")
+                || mat.toString().contains("CAVE_VINES")
+                || mat.toString().contains("COMMAND_BLOCK")
+                || mat.toString().contains("INFESTED")
+                || mat.toString().contains("LEGACY")
+                || mat.toString().contains("MELON_STEM")
+                || mat.toString().contains("PLANT")
+                || mat.toString().contains("PORTAL")
+                || mat.toString().contains("POTTED")
+                || mat.toString().contains("PUMPKIN_STEM")
+                || mat.toString().contains("SPAWN_EGG")
+                || mat.toString().contains("STRUCTURE")
+                || mat.toString().contains("TALL")
+                || mat.toString().contains("WALL_")
+        ); //makes 1003 survival items, some not yet obtainable in 1.17.1
         if (plugin.utils.prefs.getList(Prefs.Option.WUP_ALLITMES_ITEMS) == null) {
             //create an all-new project
-            //get all items
-            items = new ArrayList<>(Arrays.asList(Material.values()));
-            //remove all items that are not obtainable in survival
-            items.removeIf(mat -> mat.isAir()
-                    || mat == Material.BAMBOO_SAPLING
-                    || mat == Material.BARRIER
-                    || mat == Material.BEDROCK
-                    || mat == Material.BEETROOTS
-                    || mat == Material.BIG_DRIPLEAF_STEM
-                    || mat == Material.BUBBLE_COLUMN
-                    || mat == Material.BUDDING_AMETHYST
-                    || mat == Material.CARROTS
-                    || mat == Material.COCOA
-                    || mat == Material.DEBUG_STICK
-                    || mat == Material.DIRT_PATH
-                    || mat == Material.END_GATEWAY
-                    || mat == Material.FARMLAND
-                    || mat == Material.FIRE
-                    || mat == Material.FROSTED_ICE
-                    || mat == Material.JIGSAW
-                    || mat == Material.KNOWLEDGE_BOOK
-                    || mat == Material.LARGE_FERN
-                    || mat == Material.LAVA
-                    || mat == Material.LIGHT
-                    || mat == Material.MOVING_PISTON
-                    || mat == Material.PETRIFIED_OAK_SLAB
-                    || mat == Material.PISTON_HEAD
-                    || mat == Material.PLAYER_HEAD
-                    || mat == Material.POTATOES
-                    || mat == Material.POWDER_SNOW
-                    || mat == Material.REDSTONE_WIRE
-                    || mat == Material.SOUL_FIRE
-                    || mat == Material.SPAWNER
-                    || mat == Material.SWEET_BERRY_BUSH
-                    || mat == Material.TRIPWIRE
-                    || mat == Material.WATER
-                    || mat.toString().contains("CANDLE_CAKE")
-                    || mat.toString().contains("_CAULDRON")
-                    || mat.toString().contains("CAVE_VINES")
-                    || mat.toString().contains("COMMAND_BLOCK")
-                    || mat.toString().contains("INFESTED")
-                    || mat.toString().contains("LEGACY")
-                    || mat.toString().contains("MELON_STEM")
-                    || mat.toString().contains("PLANT")
-                    || mat.toString().contains("PORTAL")
-                    || mat.toString().contains("POTTED")
-                    || mat.toString().contains("PUMPKIN_STEM")
-                    || mat.toString().contains("SPAWN_EGG")
-                    || mat.toString().contains("STRUCTURE")
-                    || mat.toString().contains("TALL")
-                    || mat.toString().contains("WALL_")
-            ); //makes 1003 survival items, some not yet obtainable in 1.17.1
             Collections.shuffle(items);
             index = 0;
             //save to preferences
@@ -105,9 +106,14 @@ public class AllItems {
             plugin.utils.prefs.set(Prefs.Option.WUP_ALLITMES_ITEMS, itemStrings, true);
         } else {
             //load the existing project
-            items = new ArrayList<>();
+            List<Material> itemsSaved = new ArrayList<>();
             for (Object item : plugin.utils.prefs.getList(Prefs.Option.WUP_ALLITMES_ITEMS))
-                items.add(Material.getMaterial((String) item));
+                itemsSaved.add(Material.getMaterial((String) item));
+            for (Material mat : items) {
+                if (!itemsSaved.contains(mat)) {
+                    itemsSaved.add(mat);
+                }
+            }
             index = plugin.utils.prefs.getInt(Prefs.Option.WUP_ALLITMES_INDEX);
         }
         //save to preferences
