@@ -1,7 +1,7 @@
 package me.frauenfelderflorian.wuprojects;
 
 import me.frauenfelderflorian.worldutils.config.Prefs;
-import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,6 +23,7 @@ public record Listeners(WUProjects plugin) implements Listener {
                 && plugin.utils.prefs.getBoolean(Prefs.Option.WUP_ALLITEMS_RUNNING)
                 && event.getItem().getItemStack().getType() == plugin.allItems.getNextItem()) {
             plugin.allItems.update(true);
+            ((Player) event.getEntity()).playSound(event.getEntity().getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 10, 1);
         }
     }
 
