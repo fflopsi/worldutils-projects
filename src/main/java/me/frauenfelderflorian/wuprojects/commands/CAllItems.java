@@ -1,5 +1,6 @@
 package me.frauenfelderflorian.wuprojects.commands;
 
+import me.frauenfelderflorian.worldutils.Messages;
 import me.frauenfelderflorian.worldutils.config.Prefs;
 import me.frauenfelderflorian.wuprojects.WUProjects;
 import me.frauenfelderflorian.wuprojects.projects.AllItems;
@@ -36,30 +37,32 @@ public record CAllItems(WUProjects plugin) implements TabExecutor {
                 case "start" -> {
                     //start a new project if possible
                     if (!plugin.utils.prefs.getBoolean(Prefs.Option.WUP_ALLITEMS_RUNNING)) {
-                        Bukkit.broadcastMessage("§bNew AllItems project started!");
+                        Messages.sendMessage(plugin, "§bNew AllItems project started!");
                         plugin.allItems = new AllItems(plugin);
                         for (Player player : Bukkit.getOnlinePlayers()) plugin.allItems.addPlayer(player);
                     } else {
-                        sender.sendMessage("§ePlease reset the AllItems project before starting a new one.");
-                        sender.sendMessage("§cType \"/allitems reset\" to reset the AllItems project.");
+                        Messages.sendMessage(plugin, sender,
+                                "§ePlease reset the AllItems project before starting a new one.");
+                        Messages.sendMessage(plugin, sender,
+                                "§cType \"/allitems reset\" to reset the AllItems project.");
                     }
                     return true;
                 }
                 case "skip" -> {
                     //skip the current item if possible
                     if (plugin.utils.prefs.getBoolean(Prefs.Option.WUP_ALLITEMS_RUNNING)) plugin.allItems.update(true);
-                    else sender.sendMessage("§eThe AllItems project is not running.");
+                    else Messages.sendMessage(plugin, sender, "§eThe AllItems project is not running.");
                     return true;
                 }
                 case "reset" -> {
                     //reset the project
                     if (plugin.utils.prefs.getBoolean(Prefs.Option.WUP_ALLITEMS_RUNNING)) {
-                        Bukkit.broadcastMessage("§cResetting AllItems project.");
-                        Bukkit.broadcastMessage("§eStart the AllItems project with \"/allitems start\".");
+                        Messages.sendMessage(plugin, "§cResetting AllItems project.");
+                        Messages.sendMessage(plugin, "§eStart the AllItems project with \"/allitems start\".");
                         plugin.allItems.reset();
                         plugin.allItems = null;
                     } else {
-                        sender.sendMessage("§eThe AllItems project is not running.");
+                        Messages.sendMessage(plugin, sender, "§eThe AllItems project is not running.");
                     }
                     return true;
                 }

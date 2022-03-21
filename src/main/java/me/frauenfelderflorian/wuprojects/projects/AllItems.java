@@ -110,7 +110,7 @@ public class AllItems {
             for (Material mat : itemsNew)
                 if (!itemsSaved.contains(mat)) {
                     itemsSaved.add(mat);
-                    Messages.sendMessage(itemName(mat) + " has been added to the list of items to obtain.");
+                    Messages.sendMessage(plugin, itemName(mat) + " has been added to the list of items to obtain.");
                 }
             //save to properties
             items = new ArrayList<>(itemsSaved);
@@ -139,11 +139,12 @@ public class AllItems {
         itemBar.setProgress((double) index / items.size());
         if (index < items.size()) {
             //there are more items to collect
-            Bukkit.broadcastMessage("§bNext item to collect: §l" + itemName(getNextItem()));
+            Messages.sendMessage(plugin, "§bNext item to collect: §l" + itemName(getNextItem()));
             itemBar.setTitle("Next item: §b§l" + itemName(getNextItem()));
         } else {
             //all items are collected
-            Bukkit.broadcastMessage("§bAll items collected! §lCongratulations, you finished the project §oAllItems!");
+            Messages.sendMessage(plugin,
+                    "§bAll items collected! §lCongratulations, you finished the project §oAllItems!");
             itemBar.setTitle("§b§lAll items collected!");
             plugin.utils.prefs.set(Prefs.Option.WUP_ALLITEMS_RUNNING, false, true);
         }
