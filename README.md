@@ -4,7 +4,7 @@
 ![commits](https://img.shields.io/github/commits-since/fflopsi/worldutils-projects/latest?sort=semver)
 ![downloads](https://img.shields.io/github/downloads/fflopsi/worldutils-projects/latest/total?sort=semver)
 ![issues](https://img.shields.io/github/issues/fflopsi/worldutils-projects)
-![build](https://img.shields.io/github/actions/workflow/status/fflopsi/worldutils-projects/test.yml)
+![build](https://img.shields.io/github/actions/workflow/status/fflopsi/worldutils-projects/maven.yml)
 
 This Minecraft Spigot plugin contains some long-term projects and is an extension to my other
 plugin, [WorldUtils](https://github.com/fflopsi/worldutils).
